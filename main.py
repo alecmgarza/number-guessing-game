@@ -19,4 +19,4 @@ while guess_count > 0:
         break
 
 if guess_count == 0:
-    print("Game over, you've run out of guesses!")
+    print(f"Game over, you've run out of guesses!\nCorrect number was {random_num}.")
