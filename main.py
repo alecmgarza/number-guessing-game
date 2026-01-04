@@ -20,6 +20,7 @@ def chooseDifficulty():
 
 def guessRounds():
     global guess_count
+    global player_guess
 
     player_guess = int(input(f"\nThinking of a number between 1 and 100...({guess_count} guesses remaining)\n\n"))
 
@@ -34,20 +35,31 @@ def guessRounds():
             print("\nPlease make sure the number you guess is within range (1-100).\n")
             guessRounds()
         else:
-            print("\nCongrats! You've guessed the correct number!")
             break
 
-    if guess_count == 1:
-        print(f"\nGame over, you've run out of guesses!\nCorrect number was {random_num}.\n\n")
+def gameOver():
+    if guess_count == 1 and player_guess != random_num:
+        print(f"\nGame over, you've run out of guesses!\nCorrect number was {random_num}.\n")
+    else:
+        print("\nCongrats! You've guessed the correct number!")
+
+    play_again = input("\nWould you like to play again? (y/n)\n\n")
+
+    if play_again == "y" or play_again == "Y":
+        game()
+    elif play_again == "n" or play_again == "N":
+        print("\nThanks for playing!\n")
         return
-    
-# introduced a bug where multiple out of range inputs result in Game Over message getting called multiple times
+    else: 
+        gameOver()
 
 def game():
     global random_num
 
     chooseDifficulty()
     random_num = random.randint(1,100)
+    print(random_num)
     guessRounds()
+    gameOver()
 
 game()
