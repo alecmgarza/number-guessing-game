@@ -1,8 +1,27 @@
 import random
 
 random_num = random.randint(1,100)
-# print(random_num)
-guess_count = 5
+guess_count = 10
+
+def chooseDifficulty():
+    global guess_count
+
+    difficulty = input("\nChoose your difficulty...\n" \
+    "Enter 1: Easy (15 guesses)\n" \
+    "Enter 2: Medium (10 guesses)\n" \
+    "Enter 3: Hard (5 guesses)\n\n")
+
+    if difficulty == "1":
+        guess_count = 15
+    elif difficulty == "2":
+        guess_count = 10
+    elif difficulty == "3":
+        guess_count = 5
+    else:
+        print("\nPlease enter a correct key. Do not include spaces.\n\n")
+        chooseDifficulty()
+
+chooseDifficulty()
 
 player_guess = int(input(f"Thinking of a number between 1 and 100...({guess_count} guesses remaining)\n"))
 guess_count = guess_count - 1
