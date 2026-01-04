@@ -51,6 +51,7 @@ def gameOver():
         print("\nThanks for playing!\n")
         return
     else: 
+        print("\nInvalid input entered...")
         gameOver()
 
 def game():
