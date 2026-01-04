@@ -1,8 +1,6 @@
 import random
 
 def chooseDifficulty():
-    global guess_count
-
     difficulty = input("\nChoose your difficulty...\n" \
     "Enter 1: Easy (15 guesses)\n" \
     "Enter 2: Medium (10 guesses)\n" \
@@ -15,35 +13,59 @@ def chooseDifficulty():
     elif difficulty == "3":
         guess_count = 5
     else:
-        print("\nPlease enter a correct key. Do not include spaces.\n\n")
-        chooseDifficulty()
+        print("\nPlease enter a correct key. Do not include spaces.")
+        return chooseDifficulty()
 
-def guessRounds():
-    global guess_count
-    global player_guess
+    return guess_count
 
-    player_guess = int(input(f"\nThinking of a number between 1 and 100...({guess_count} guesses remaining)\n\n"))
+def randomNum():
+    random_num = random.randint(1,100)
 
-    while guess_count > 1:
-        if 100 >= player_guess > random_num:
+    return random_num
+
+def takeGuesses(guess_count, random_num):
+    player_guess = input(f"\nThinking of a number between 1 and 100...({guess_count} guesses remaining)\n\n")
+    guess_count = guess_count - 1
+
+    while guess_count > 0:
+        try:
+            player_guess = int(player_guess)
+        except ValueError:
+            player_guess = input("\nPlease enter a number, not letters.\n\n")
+            continue
+
+        if player_guess > 100:
+            print("\nNumber cannot be more than 100.")
+            player_guess = input("\nTake another guess!\n\n")
+        elif player_guess < 1:
+            print("\nNumber cannot be less than 1.")
+            player_guess = input("\nTake another guess!\n\n")
+        elif player_guess > random_num:
+            player_guess = input(f"\nGo lower...({guess_count} guesses remaining)\n\n")
             guess_count = guess_count - 1
-            player_guess = int(input(f"\nLower...({guess_count} guesses remaining)\n\n"))
-        elif 1 <= player_guess < random_num:
+        elif player_guess < random_num:
+            player_guess = input(f"\nGo higher...({guess_count} guesses remaining)\n\n")
             guess_count = guess_count - 1
-            player_guess = int(input(f"\nHigher...({guess_count} guesses remaining)\n\n"))
-        elif player_guess > 100 or player_guess < 1:
-            print("\nPlease make sure the number you guess is within range (1-100).\n")
-            guessRounds()
-        else:
+        else: 
             break
 
-def gameOver():
-    if guess_count == 1 and player_guess != random_num:
-        print(f"\nGame over, you've run out of guesses!\nCorrect number was {random_num}.\n")
-    else:
-        print("\nCongrats! You've guessed the correct number!")
+    return guess_count, player_guess, random_num
 
-    play_again = input("\nWould you like to play again? (y/n)\n\n")
+def gameOver(guess_count, player_guess, random_num):
+    while guess_count == 0 and player_guess != random_num:
+        try:
+            player_guess = int(player_guess)
+        except ValueError:
+            player_guess = input("\nPlease enter a number, not letters.\n\n")
+            continue
+        break
+    
+    if player_guess == random_num:
+        print("\nCongrats! You've guessed the correct number!")
+    else:
+        print(f"\nGame over, you've run out of guesses!\nCorrect number was {random_num}.\n")
+
+    play_again = input("Would you like to play again? (y/n)\n\n")
 
     if play_again == "y" or play_again == "Y":
         game()
@@ -55,12 +77,9 @@ def gameOver():
         gameOver()
 
 def game():
-    global random_num
-
-    chooseDifficulty()
-    random_num = random.randint(1,100)
-    print(random_num)
-    guessRounds()
-    gameOver()
+    guess_count = chooseDifficulty()
+    random_num = randomNum()
+    guess_count, player_guess, random_num = takeGuesses(guess_count, random_num)
+    gameOver(guess_count, player_guess, random_num)
 
 game()
